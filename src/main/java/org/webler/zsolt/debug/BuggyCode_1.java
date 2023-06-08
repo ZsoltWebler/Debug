@@ -11,7 +11,7 @@ public class BuggyCode_1 {
         System.out.println("The sum of " + num1 + " and " + num2 + " is: " + sum);
 
         int product = multiplyNumbers(num1, num2);
-        System.out.println("The product of " + sum + " and " + num2 + " is: " + product);
+        System.out.println("The product of " + num1 + " and " + num2 + " is: " + product);
 
 
     }
@@ -22,7 +22,7 @@ public class BuggyCode_1 {
     }
 
     public static int multiplyNumbers(int a, int b) {
-        int product = a * a;
+        int product = a * b;
         return product;
     }
 

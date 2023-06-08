@@ -1,13 +1,12 @@
 package org.webler.zsolt.debug;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BuggyCode_3 {
 
     public static void main(String[] args) {
-        List<Integer> numbers = Collections.emptyList();
+        List<Integer> numbers = new ArrayList<>();
         numbers.add(1);
         numbers.add(2);
         numbers.add(3);
@@ -26,7 +25,7 @@ public class BuggyCode_3 {
     public static List<Integer> squareList(List<Integer> list) {
         List<Integer> squaredList = new ArrayList<>();
 
-        for (int i = 1; i <= list.size() - 1; i++) {
+        for (int i = 0; i <= list.size() - 1; i++) {
             int square = list.get(i) * list.get(i);
             squaredList.add(square);
         }
@@ -38,7 +37,7 @@ public class BuggyCode_3 {
         int sum = 0;
 
         for (int num : list) {
-            sum *= num;
+            sum += num;
         }
 
         return sum;
@@ -46,8 +45,8 @@ public class BuggyCode_3 {
 
     public static double calculateAverage(List<Integer> list) {
         int sum = calculateSum(list);
-        double average = sum / list.size();
-        return average;
+        double listSize = list.size() == 0 ? 1.0 : list.size();
+        return sum / listSize;
     }
 
 }

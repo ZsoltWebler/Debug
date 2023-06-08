@@ -1,13 +1,13 @@
 package org.webler.zsolt.debug;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class Graph {
     private Map<Integer, List<Integer>> adjacencyList;
 
     public Graph() {
+        //Initialize the hashmap
+        adjacencyList = new HashMap<>();
     }
 
     public void addVertex(int vertex) {
@@ -15,11 +15,26 @@ class Graph {
     }
 
     public void addEdge(int source, int destination) {
+        //Checks if the adjacencyList contains the vertices
+        if (!adjacencyList.containsKey(source))
+            addVertex(source);
+
+        if (!adjacencyList.containsKey(destination))
+            addVertex(destination);
+
         adjacencyList.get(source).add(destination);
     }
 
     public void removeVertex(int vertex) {
-        adjacencyList.remove(vertex);
+        //Checks if the adjacencyList contains the vertices
+        if (adjacencyList.containsKey(vertex)) {
+            adjacencyList.remove(vertex);
+
+            //Remove the neighbors as well
+            for (List<Integer> neighbors : adjacencyList.values()) {
+                neighbors.removeIf(v -> v == vertex);
+            }
+        }
     }
 
     public void removeEdge(int source, int destination) {
@@ -27,7 +42,7 @@ class Graph {
             adjacencyList.get(source).removeIf(v -> v == destination);
     }
 
-    public List<Integer> getNeighbors(int vertex) { //TODO
+    public List<Integer> getNeighbors(int vertex) {
         return adjacencyList.getOrDefault(vertex, new ArrayList<>());
     }
 
@@ -54,8 +69,27 @@ class Graph {
     }
 
     public boolean isAcyclic() {
-        //TODO Return whether the graph is acyclic or not
-        return false;
+
+        for (int key : adjacencyList.keySet()) {
+            Set<Integer> allReachableVerticesFromGivenVertex = new HashSet<>(getNeighbors(key));
+            while (true) {
+                int prevSize = allReachableVerticesFromGivenVertex.size();
+                List<Integer> neighbors = new ArrayList<>();
+                for (int neighbor : allReachableVerticesFromGivenVertex) {
+                    neighbors.addAll(getNeighbors(neighbor));
+                }
+                allReachableVerticesFromGivenVertex.addAll(neighbors);
+                if (allReachableVerticesFromGivenVertex.contains(key)) {
+                    System.out.println(key + " - " + allReachableVerticesFromGivenVertex);
+                    return false;
+                }
+                if (prevSize == allReachableVerticesFromGivenVertex.size()) {
+                    break;
+                }
+            }
+        }
+
+        return true;
     }
 
     public void printGraph() {
@@ -79,11 +113,14 @@ public class BuggyCode_4 {
 
         Graph graph = new Graph();
         graph.addEdge(1, 2);
+        graph.addEdge(1, 5);
         graph.addEdge(1, 3);
         graph.addEdge(2, 3);
         graph.addEdge(3, 4);
         graph.addEdge(3, 2);
         graph.addEdge(4, 1);
+
+        System.out.println("Is graph acyclic: " + graph.isAcyclic());
 
         System.out.println("Graph structure:");
         graph.printGraph();
